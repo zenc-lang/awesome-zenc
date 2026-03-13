@@ -1,0 +1,91 @@
+import "std.zc"
+
+struct Node {
+    value: int;
+    left: Node*;
+    right: Node*;
+}
+
+impl Node {
+    fn new(v: int) -> Self* {
+        let n = alloc<Self>();
+        n.value = v;
+        n.left = NULL;
+        n.right = NULL;
+        return n;
+    }
+}
+
+struct BST {
+    root: Node*;
+}
+
+impl BST {
+    fn new() -> Self {
+        return Self { root: NULL };
+    }
+    
+    fn _insert(node: Node*, v: int) -> Node* {
+        guard node != NULL else {
+            return Node::new(v);
+        }
+        
+        if v < node.value {
+            node.left = BST::_insert(node.left, v);
+        } else if v > node.value {
+            node.right = BST::_insert(node.right, v);
+        }
+        
+        return node;
+    }
+    
+    fn insert(self, v: int) {
+        self.root = BST::_insert(self.root, v);
+    }
+    
+    fn _print_in_order(node: Node*) {
+        if node != NULL {
+            BST::_print_in_order(node.left);
+            "{node.value} "..;
+            BST::_print_in_order(node.right);
+        }
+    }
+    
+    fn print_all(self) {
+        BST::_print_in_order(self.root);
+        "";
+    }
+    
+    fn _free(node: Node*) {
+        if node != NULL {
+            BST::_free(node.left);
+            BST::_free(node.right);
+            free(node);
+        }
+    }
+    
+    fn free(self) {
+        BST::_free(self.root);
+        self.root = NULL;
+    }
+}
+
+fn main() {
+    let tree = BST::new();
+    defer tree.free();
+
+    "Inserting: 50, 30, 20, 40, 70, 60, 80";
+    tree.insert(50);
+    tree.insert(30);
+    tree.insert(20);
+    tree.insert(40);
+    tree.insert(70);
+    tree.insert(60);
+    tree.insert(80);
+    
+    "In-Order Traversal: "..;
+    tree.print_all();
+    
+    "Expected:           20 30 40 50 60 70 80";
+    
+}

@@ -1,0 +1,40 @@
+//> link: -lraylib -lm
+
+import "raylib.h" as raylib;
+
+fn main() {
+    raylib::InitWindow(800, 600, "Zen C + Raylib");
+    defer raylib::CloseWindow();
+
+    raylib::SetTargetFPS(60);
+    
+    let x = 400;
+    let y = 300;
+    let dx = 5;
+    let dy = 4;
+    let radius = 30;
+    
+    while !raylib::WindowShouldClose() 
+    {
+        x += dx;
+        y += dy;
+        
+        if x - radius < 0 || x + radius > 800 {
+            dx = -dx;
+        }
+        if y - radius < 0 || y + radius > 600 {
+            dy = -dy;
+        }
+        
+        raylib::BeginDrawing();
+        raylib::ClearBackground(RAYWHITE);
+        
+        raylib::DrawText("Zen C + Raylib Demo!", 250, 20, 30, DARKGRAY);
+        
+        raylib::DrawCircle(x, y, (float)radius, RED);
+        
+        raylib::DrawFPS(10, 10);
+        
+        raylib::EndDrawing();
+    }
+}

@@ -1,0 +1,35 @@
+
+import "std/map.zc"
+
+fn main() {
+    let text = "apple banana apple cherry banana apple";
+    let delim = " ";
+    
+    let counts = Map<int>::new();
+    defer counts.free();
+
+    let temp = strdup(text);
+    defer free(temp);
+    
+    let token = strtok(temp, delim);
+    while token != NULL {
+        if counts.contains(token) {
+            let val = counts.get(token).unwrap();
+            counts.put(token, val + 1);
+        } else {
+            counts.put(token, 1);
+        }
+        token = strtok(NULL, delim);
+    }
+
+    "Word Frequencies:";
+    "-----------------";
+    
+    for i in 0..counts.capacity() {
+        if counts.is_slot_occupied(i) {
+            let k = counts.key_at(i);
+            let v = counts.val_at(i);
+            println "{k}: {v}";
+        }
+    }
+}

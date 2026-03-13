@@ -1,0 +1,98 @@
+
+include <stdio.h>
+include <stdlib.h>
+include <time.h>
+
+struct Point {
+    x: int,
+    y: int
+}
+
+enum Event {
+    Quit,
+    Click(Point),
+    KeyPress(char)
+}
+
+trait Drawable {
+    fn draw(self);
+}
+
+struct Button {
+    label: char*,
+    width: int,
+    height: int
+}
+
+impl Button {
+    fn draw(self) {
+        println "[Button: '{self.label}' size={self.width}x{self.height}]";
+    }
+}
+
+struct Container<T> {
+    item: T
+}
+
+impl Container<T> {
+    fn get(self) -> T {
+        return self.item;
+    }
+}
+
+fn run_op(a: int, b: int, op: fn(int, int) -> int) -> int {
+    return op(a, b);
+}
+
+fn process_event(e: Event) {
+    match e {
+        Event::Quit => {
+            println "Event: Quit received. Shutting down...";
+        },
+        Event::Click(p) => {
+            println "Event: Mouse Clicked at ({p.x}, {p.y})";
+        },
+        Event::KeyPress(k) => {
+            println "Event: Key Pressed '{k}'";
+        },
+        _ => {
+            println "Event: Unknown";
+        }
+    }
+}
+
+fn main() {
+    defer { println "End of demo!"; }
+    defer { println "Cleaning up resources..."; }
+
+    println "=> Generics and traits.";
+    let btn = Button { 
+        label: "Submit", 
+        width: 120, 
+        height: 40 
+    };
+
+    let container = Container<Button> { item: btn };
+    
+    let b = container.get();
+    b.draw();
+    println "";
+
+    println "=> Enums and pattern matching.";
+    let events: Event[4] = [
+        Event::Click(Point { x: 150, y: 300 }),
+        Event::KeyPress('Z'),
+        Event::Click(Point { x: 42, y: 0 }),
+        Event::Quit()
+    ];
+
+    for i in 0..4 {
+        process_event(events[i]);
+    }
+    println "";
+
+    println "=> Lambdas";
+    let sum = run_op(10, 20, (a, b) -> a + b);
+    println "10 + 20 = {sum}";
+    println "";
+}

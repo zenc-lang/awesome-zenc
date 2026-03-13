@@ -1,0 +1,57 @@
+
+import "std.zc"
+
+fn swap(arr: int*, i: isize, j: isize) {
+    let temp = arr[i];
+    arr[i] = arr[j];
+    arr[j] = temp;
+}
+
+fn partition(arr: int*, low: isize, high: isize) -> isize {
+    let pivot = arr[high];
+    let i = low - 1;
+    
+    for j in low..high {
+        if arr[j] < pivot {
+            i++;
+            swap(arr, i, j);
+        }
+    }
+    swap(arr, i + 1, high);
+    return i + 1;
+}
+
+fn quicksort(arr: int*, low: isize, high: isize) {
+    if low < high {
+        let pi = partition(arr, low, high);
+        quicksort(arr, low, pi - 1);
+        quicksort(arr, pi + 1, high);
+    }
+}
+
+fn print_array(arr: int*, size: isize) {
+    "["..;
+    for i in 0..size {
+        "{arr[i]}"..;
+        if i < size - 1 { ", "..; }
+    }
+    "]";
+}
+
+fn main() {
+    let v = Vec<int>::new();
+    defer v.free();    
+
+    let values = [10, 7, 8, 9, 1, 5, 3, 12, 2, 6];
+    for i in 0..10 {
+        v.push(values[i]);
+    }
+    
+    "Original: "..;
+    print_array(v.data, (int)v.len);
+    
+    quicksort(v.data, 0, (isize)v.len - 1);
+    
+    "Sorted:   "..;
+    print_array(v.data, (int)v.len);
+}

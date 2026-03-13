@@ -1,0 +1,51 @@
+import "std.zc"
+
+fn main() {
+    "[Integer Stack]";
+    let int_stack = Stack<int>::new();
+    
+    "Pushing: 10, 20, 30";
+    int_stack.push(10);
+    int_stack.push(20);
+    int_stack.push(30);
+    
+    "Size: {int_stack.length()}";
+    
+    let opt_peek: Option<int> = int_stack.pop();
+    if opt_peek.is_some() {
+        let val = opt_peek.unwrap();
+        "Peek/Popped Top: {val}";
+    }
+    
+    "Popping remaining: "..;
+    while !int_stack.is_empty() {
+        let opt = int_stack.pop();
+        if opt.is_some() {
+            "{opt.unwrap()} "..;
+        }
+    }
+    "";
+    
+    // RAII will automatically free int_stack here
+
+    "";
+    "[String Stack]";
+    let str_stack = Stack<String>::new();
+    
+    str_stack.push(String::new("First"));
+    str_stack.push(String::new("Second"));
+    str_stack.push(String::new("Third"));
+    
+    "Popping: "..;
+    while !str_stack.is_empty() {
+        let opt_s = str_stack.pop();
+        if opt_s.is_some() {
+            let s: String = opt_s.unwrap();
+            "{s.c_str()} "..;
+            // s will be freed automatically at the end of this block
+        }
+    }
+    "";
+    
+    // RAII will automatically free str_stack here
+}

@@ -1,0 +1,131 @@
+
+import "std/io.zc"
+import "std/fs.zc"
+import "std/string.zc"
+
+def TAPE_SIZE = 30000;
+
+fn print_usage() {
+    "Usage: bf2zc <input.bf> [output.zc]";
+}
+
+fn transpile(input: char*) -> String {
+    let output = String::new("import \"std/io.zc\"\n\n");
+    output.append_c("fn main() {{ \n");
+    output.append_c("    let tape: uint8_t[{TAPE_SIZE}];\n");
+    output.append_c("    let ptr: int = 0;\n");
+    output.append_c("    for (let i = 0; i < {TAPE_SIZE}; i += 1) tape[i] = 0;\n\n");
+
+    let i: usize = 0;
+    let len = strlen(input);
+    let indent = 1;
+
+    while (i < len) {
+        let c = input[i];
+        
+        match c {
+            '>', '<', '+', '-', '.', ',', '[', ']' => {},
+            _ => {
+                i++;
+                continue;
+            }
+        }
+
+        if (c == ']') indent--;
+
+        for (let j = 0; j < indent; j++) output.append_c("    ");
+
+        match c {
+            '>' => {
+                let count = 0;
+                while (i < len && input[i] == '>') {
+                    count++;
+                    i++;
+                }
+                i--;
+                output.append_c("ptr += {count};\n");
+            },
+            '<' => {
+                let count = 0;
+                while (i < len && input[i] == '<') {
+                    count++;
+                    i++;
+                }
+                i--;
+                output.append_c("ptr -= {count};\n");
+            },
+            '+' => {
+                let count = 0;
+                while (i < len && input[i] == '+') {
+                    count++;
+                    i++;
+                }
+                i--;
+                output.append_c("tape[ptr] += {count};\n");
+            },
+            '-' => {
+                let count = 0;
+                while (i < len && input[i] == '-') {
+                    count++;
+                    i++;
+                }
+                i--;
+                output.append_c("tape[ptr] -= {count};\n");
+            },
+            '.' => {
+                output.append_c("printf(\"%c\", (char)tape[ptr]);\n");
+            },
+            ',' => {
+                output.append_c("tape[ptr] = (uint8_t)getchar();\n");
+            },
+            '[' => {
+                // Use {{ }} for braced block
+                output.append_c("while (tape[ptr] != 0) {{\n");
+                indent += 1;
+            },
+            ']' => {
+                output.append_c("}\n");
+            },
+            _ => {}
+        }
+        i++;
+    }
+
+    output.append_c("    println \"\";\n    return 0;\n}\n");
+    return output;
+}
+
+fn main(argc: int, argv: char**) {
+    guard argc >= 2 else {
+        print_usage();
+        return 0;
+    }
+
+    let input_path = argv[1];
+    let output_path: char* = argc > 2 ? argv[2] : "out.zc";
+
+    let content_res = File::read_all(input_path);
+    guard content_res.is_ok() else {
+        !"Error: Could not read file {input_path}";
+        return 1;
+    }
+    
+    let content = content_res.unwrap();
+    defer content.destroy();
+    
+    let transpiled = transpile(content.c_str());
+    defer transpiled.destroy();
+    
+    let out_file_res = File::open(output_path, "w");
+    guard out_file_res.is_ok() else {
+        !"Error: Could not open output file {output_path}";
+        return 1;
+    }
+
+    let out_file = out_file_res.unwrap();
+    out_file.write_string(transpiled.c_str());
+    out_file.close();
+
+    "Successfully transpiled {input_path} to {output_path}";
+    return 0;
+}

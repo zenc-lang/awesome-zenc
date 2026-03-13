@@ -1,0 +1,20 @@
+
+import "std/process.zc";
+import "std/string.zc";
+
+fn main() {
+    "Executing 'ls -la' using std/process...";
+    
+    let output = Command::new("ls")
+        .arg("-l")
+        .arg("-a")
+        .output();
+    
+    if output.exit_code == 0 {
+        "--- Output ---";
+        output.std_out.print();
+        "--------------";
+    } else {
+        !"Command failed with exit code: {output.exit_code}";
+    }
+}

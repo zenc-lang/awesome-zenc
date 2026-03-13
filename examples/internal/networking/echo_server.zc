@@ -1,0 +1,51 @@
+
+import "std/net/tcp.zc"
+
+def SIZE = 1024;
+
+fn main() {
+    setbuf(stdout, NULL);
+    "Starting Echo Server on 127.0.0.1:8080...";
+    
+    let listener_res = TcpListener::bind("127.0.0.1", 8080);
+    guard listener_res.is_ok() else {
+        !"Failed to bind: {listener_res.err}";
+        return 1;
+    }
+
+    let listener = listener_res.unwrap();
+
+    loop {
+        let client_res = listener.accept();
+        if client_res.is_ok() {
+            let stream = client_res.unwrap();
+            
+            "New Connection!";
+            
+            let buf: char[SIZE];
+            
+            while true {
+                let read_res = stream.read(&buf[0], SIZE);
+                
+                if read_res.is_err() {
+                    !"Read error: {read_res.err}";
+                    break;
+                }
+                
+                let bytes = read_res.unwrap();
+                if bytes == 0 {
+                    "Client disconnected.";
+                    break;
+                }
+                
+                let write_res = stream.write((u8*)&buf[0], bytes);
+                 if write_res.is_err() {
+                    !"Write error: {write_res.err}";
+                    break;
+                }
+
+                "Echoed {bytes} bytes.";
+            }
+        }
+    }
+}

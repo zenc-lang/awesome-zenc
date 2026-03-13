@@ -1,0 +1,403 @@
+// ========================================
+// GPU Benchmark - Zen-C CUDA
+// ========================================
+
+import "std/cuda.zc"
+import "std/mem.zc"
+
+// ========================================
+// Kernel 1: Matrix Multiplication
+// ========================================
+
+@global
+fn matrix_multiply_kernel(A: float*, B: float*, C: float*, N: int) {
+    let row = block_id_y() * block_dim_y() + thread_id_y();
+    let col = block_id_x() * block_dim_x() + thread_id_x();
+
+    if row < N && col < N {
+        let sum = 0.0f;
+        for k in 0..N {
+            sum = sum + A[row * N + k] * B[k * N + col];
+        }
+        C[row * N + col] = sum;
+    }
+}
+
+// ========================================
+// Kernel 2: Monte Carlo Pi Estimation
+// ========================================
+
+@global
+fn monte_carlo_pi_kernel(results: float*, num_samples: u64, seed: u64) {
+    let idx = block_id_x() * block_dim_x() + thread_id_x();
+    let total_threads = grid_dim_x() * block_dim_x();
+
+    let local_count: u64 = 0;
+    let samples_per_thread = num_samples / total_threads;
+
+    // Simple random number generator
+    let rand_state = seed + idx;
+
+    for i in 0..samples_per_thread {
+        // Generate random x and y in [0, 1]
+        let a: u64 = 1103515245u64;
+        let b: u64 = 12345u64;
+        let m: u64 = 2147483648u64;
+
+        rand_state = (a * rand_state + b) % m;
+        let x = (float)rand_state / 2147483648.0f;
+
+        rand_state = (a * rand_state + b) % m;
+        let y = (float)rand_state / 2147483648.0f;
+
+        // Check if point is inside quarter circle
+        if x * x + y * y <= 1.0f {
+            local_count = local_count + 1;
+        }
+    }
+    results[idx] = (float)local_count;
+}
+
+// ========================================
+// Kernel 3: N-Body Simulation
+// ========================================
+
+@global
+fn nbody_kernel(x: float*, y: float*, z: float*,
+                vx: float*, vy: float*, vz: float*,
+                N: int, dt: float) {
+    let i = thread_id();
+
+    if i < N {
+        let ax = 0.0f;
+        let ay = 0.0f;
+        let az = 0.0f;
+        let xi = x[i];
+        let yi = y[i];
+        let zi = z[i];
+
+        // Calculate gravitational forces from all other bodies
+        for j in 0..N {
+            if i != j {
+                let dx = x[j] - xi;
+                let dy = y[j] - yi;
+                let dz = z[j] - zi;
+
+                let dx2 = dx * dx;
+                let dy2 = dy * dy;
+                let dz2 = dz * dz;
+                let softening: float = 0.0000000001f;
+                let dist_sqr = dx2 + dy2 + dz2 + softening;
+                let dist = sqrtf(dist_sqr);
+                let force = 1.0f / (dist_sqr * dist);
+
+                ax = ax + (force * dx);
+                ay = ay + (force * dy);
+                az = az + (force * dz);
+            }
+        }
+
+        // Update velocities
+        vx[i] = vx[i] + ax * dt;
+        vy[i] = vy[i] + ay * dt;
+        vz[i] = vz[i] + az * dt;
+
+        // Update positions
+        x[i] = x[i] + vx[i] * dt;
+        y[i] = y[i] + vy[i] * dt;
+        z[i] = z[i] + vz[i] * dt;
+    }
+}
+
+// ========================================
+// Kernel 4: Mandelbrot Set (Complex)
+// ========================================
+
+@global
+fn mandelbrot_kernel(output: int*, width: int, height: int, max_iter: int) {
+    let px = block_id_x() * block_dim_x() + thread_id_x();
+    let py = block_id_y() * block_dim_y() + thread_id_y();
+
+    if px < width && py < height {
+        // Map pixel to complex plane
+        let x0 = ((float)px / (float)width) * 3.5f - 2.5f;
+        let y0 = ((float)py / (float)height) * 2.0f - 1.0f;
+
+        let x = 0.0f;
+        let y = 0.0f;
+        let iter = 0;
+
+        // Iterate z = z^2 + c
+        for i in 0..max_iter {
+            let x2 = x * x;
+            let y2 = y * y;
+            if (x2 + y2) > 4.0f {
+                break;
+            }
+            let xtemp = x2 - y2 + x0;
+            let xy2 = 2.0f * x * y;
+            y = xy2 + y0;
+            x = xtemp;
+            iter = iter + 1;
+        }
+        output[py * width + px] = iter;
+    }
+}
+
+// ========================================
+// Helper: Print GPU Info
+// ========================================
+
+fn print_gpu_info() {
+
+    let device_count = cuda_device_count();
+    "Found {device_count} CUDA device(s)\n";
+}
+
+// ========================================
+// Benchmark 1: Matrix Multiplication
+// ========================================
+
+fn benchmark_matrix_multiply(N: int) {
+    "Benchmark 1: Matrix Multiplication ({N}x{N}) ";
+
+    let size = N * N;
+
+    // Allocate host memory
+    "-> Allocating host memory...";
+    let h_A = alloc_n<float>(size);
+    let h_B = alloc_n<float>(size);
+    let h_C = alloc_n<float>(size);
+    defer free(h_A);
+    defer free(h_B);
+    defer free(h_C);
+
+    // Initialize matrices
+    "-> Initializing {N}x{N} matrices...";
+    for i in 0..size {
+        h_A[i] = (float)(i % 100) / 100.0f;
+        h_B[i] = (float)((i + 50) % 100) / 100.0f;
+    }
+
+    // Allocate device memory
+    "-> Allocating device memory...";
+    let d_A = cuda_alloc<float>(size);
+    let d_B = cuda_alloc<float>(size);
+    let d_C = cuda_alloc<float>(size);
+    defer cuda_free(d_A);
+    defer cuda_free(d_B);
+    defer cuda_free(d_C);
+
+    // Copy to device
+    "-> Copying data to GPU...";
+    cuda_copy_to_device(d_A, h_A, size * sizeof(float));
+    cuda_copy_to_device(d_B, h_B, size * sizeof(float));
+
+    // Configure grid
+    def BLOCK_SIZE = 16;
+    let blocks_per_grid = (N + BLOCK_SIZE - 1) / BLOCK_SIZE;
+
+    "-> Launching kernel: {blocks_per_grid}x{blocks_per_grid} blocks, {BLOCK_SIZE}x{BLOCK_SIZE} threads each";
+    " GPU IS NOW WORKING HARD - Check nvtop!\n";
+
+    let start = clock();
+
+    // Run multiple iterations to keep GPU busy
+    for iter in 0..10 {
+        launch matrix_multiply_kernel(d_A, d_B, d_C, N) with {
+            grid: blocks_per_grid,
+            block: BLOCK_SIZE
+        };
+        cuda_sync();
+        "  Iteration {iter + 1}/10 complete";
+    }
+
+    let elapsed = (clock() - start) / CLOCKS_PER_SEC;
+    " Completed in {elapsed} seconds\n";
+
+    // Copy result back
+    cuda_copy_to_host(h_C, d_C, size * sizeof(float));
+
+    "-> Sample results:";
+    "  C[0,0] = {h_C[0]}";
+    "  C[N-1,N-1] = {h_C[size - 1]}";
+}
+
+// ========================================
+// Benchmark 2: Monte Carlo Pi
+// ========================================
+
+fn benchmark_monte_carlo_pi(num_samples: u64) {
+    "Benchmark 2: Monte Carlo Pi Estimation ";
+
+    "-> Estimating Pi with {num_samples} samples";
+
+    def BLOCK_SIZE = 256;
+    def NUM_BLOCKS = 1024;
+    let total_threads = BLOCK_SIZE * NUM_BLOCKS;
+
+    // Allocate memory
+    let h_results = alloc_n<float>(total_threads);
+    defer free(h_results);
+
+    let d_results = cuda_alloc<float>(total_threads);
+    defer cuda_free(d_results);
+
+    "-> Launching kernel: {NUM_BLOCKS} blocks x {BLOCK_SIZE} threads";
+    " GPU IS NOW WORKING HARD - Check nvtop!\n";
+
+    let start = clock();
+
+    // Run many iterations
+    for iter in 0..100 {
+        let seed = (u64)time(NULL) + (u64)iter;
+
+        launch monte_carlo_pi_kernel(d_results, num_samples, seed) with {
+            grid: NUM_BLOCKS,
+            block: BLOCK_SIZE
+        };
+        cuda_sync();
+
+        if iter % 10 == 0 {
+            "  Iteration {iter}/100 complete";
+        }
+    }
+
+    let elapsed = (clock() - start) / CLOCKS_PER_SEC;
+    "\n Completed in {elapsed} seconds\n";
+
+    // Copy results and calculate Pi
+    cuda_copy_to_host(h_results, d_results, total_threads * sizeof(float));
+
+    let total_inside: u64 = 0;
+    for i in 0..total_threads {
+        total_inside = total_inside + (u64)h_results[i];
+    }
+
+    let pi_estimate = 4.0 * (double)total_inside / (double)num_samples;
+    let error = fabs(pi_estimate - 3.14159265359);
+
+    "-> Results:";
+    "  Estimated Pi: {pi_estimate}";
+    "  Actual Pi:    3.14159265359";
+    "  Error:        {error}";
+}
+
+// ========================================
+// Benchmark 3: N-Body Simulation
+// ========================================
+
+fn benchmark_nbody(num_bodies: int, num_steps: int) {
+
+    "Benchmark 3: N-Body Simulation ";
+
+    "-> Simulating {num_bodies} bodies for {num_steps} steps";
+
+    // Allocate host memory
+    let h_x = alloc_n<float>(num_bodies);
+    let h_y = alloc_n<float>(num_bodies);
+    let h_z = alloc_n<float>(num_bodies);
+    let h_vx = alloc_n<float>(num_bodies);
+    let h_vy = alloc_n<float>(num_bodies);
+    let h_vz = alloc_n<float>(num_bodies);
+    defer free(h_x);
+    defer free(h_y);
+    defer free(h_z);
+    defer free(h_vx);
+    defer free(h_vy);
+    defer free(h_vz);
+
+    // Initialize random positions
+    "-> Initializing random positions...";
+    srand(time(NULL));
+    for i in 0..num_bodies {
+        h_x[i] = ((float)rand() / (float)RAND_MAX) * 2.0f - 1.0f;
+        h_y[i] = ((float)rand() / (float)RAND_MAX) * 2.0f - 1.0f;
+        h_z[i] = ((float)rand() / (float)RAND_MAX) * 2.0f - 1.0f;
+        h_vx[i] = 0.0f;
+        h_vy[i] = 0.0f;
+        h_vz[i] = 0.0f;
+    }
+
+    // Allocate device memory
+    "-> Allocating device memory...";
+    let d_x = cuda_alloc<float>(num_bodies);
+    let d_y = cuda_alloc<float>(num_bodies);
+    let d_z = cuda_alloc<float>(num_bodies);
+    let d_vx = cuda_alloc<float>(num_bodies);
+    let d_vy = cuda_alloc<float>(num_bodies);
+    let d_vz = cuda_alloc<float>(num_bodies);
+    defer cuda_free(d_x);
+    defer cuda_free(d_y);
+    defer cuda_free(d_z);
+    defer cuda_free(d_vx);
+    defer cuda_free(d_vy);
+    defer cuda_free(d_vz);
+
+    // Copy to device
+    cuda_copy_to_device(d_x, h_x, num_bodies * sizeof(float));
+    cuda_copy_to_device(d_y, h_y, num_bodies * sizeof(float));
+    cuda_copy_to_device(d_z, h_z, num_bodies * sizeof(float));
+    cuda_copy_to_device(d_vx, h_vx, num_bodies * sizeof(float));
+    cuda_copy_to_device(d_vy, h_vy, num_bodies * sizeof(float));
+    cuda_copy_to_device(d_vz, h_vz, num_bodies * sizeof(float));
+
+    def BLOCK_SIZE = 256;
+    let num_blocks = (num_bodies + BLOCK_SIZE - 1) / BLOCK_SIZE;
+    let dt = 0.01f;
+
+    "-> Launching simulation: {num_blocks} blocks x {BLOCK_SIZE} threads";
+    " GPU IS NOW WORKING HARD - Check nvtop!\n";
+
+    let start = clock();
+
+    for step in 0..num_steps {
+        launch nbody_kernel(d_x, d_y, d_z, d_vx, d_vy, d_vz, num_bodies, dt) with {
+            grid: num_blocks,
+            block: BLOCK_SIZE
+        };
+        cuda_sync();
+
+        if step % 100 == 0 {
+            "  Step {step}/{num_steps} complete";
+        }
+    }
+
+    let elapsed = (clock() - start) / CLOCKS_PER_SEC;
+    "\n Completed in {elapsed} seconds\n";
+
+    // Copy results back
+    cuda_copy_to_host(h_x, d_x, num_bodies * sizeof(float));
+    cuda_copy_to_host(h_y, d_y, num_bodies * sizeof(float));
+    cuda_copy_to_host(h_z, d_z, num_bodies * sizeof(float));
+
+    "-> Sample final positions:";
+    "  Body 0: ({h_x[0]}, {h_y[0]}, {h_z[0]})";
+    "  Body {num_bodies-1}: ({h_x[num_bodies-1]}, {h_y[num_bodies-1]}, {h_z[num_bodies-1]})";
+}
+
+
+fn main() {
+    "Zen-C GPU Benchmark Suite ";
+
+    print_gpu_info();
+
+    "\n RUN THIS NOW: Open another terminal and run: nvtop";
+    "\nPress Enter to start benchmarks...";
+    getchar();
+
+    // Run all benchmarks
+    benchmark_matrix_multiply(2048);
+
+    "\n  Pause (5 seconds)...";
+    sleep(5);
+
+    benchmark_monte_carlo_pi(10000000000);
+
+    "\n Pause (5 seconds)...";
+    sleep(5);
+
+    benchmark_nbody(4096, 1000);
+
+    "Zen-C GPU Benchmark Suite - All tests completed.";
+}

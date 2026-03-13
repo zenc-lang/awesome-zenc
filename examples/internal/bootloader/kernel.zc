@@ -1,0 +1,28 @@
+
+def VGA_BUFFER = 0xb8000;
+def VGA_WIDTH  = 80;
+def VGA_HEIGHT = 25;
+
+@packed
+struct VGAEntry {
+    val: u8;
+    color: u8;
+}
+
+fn kmain() {
+    let vga = (VGAEntry*)VGA_BUFFER;
+    
+    let msg = "Hello from Zen C!";
+    let color = 0x0f; // White on Black
+
+    let i = 0;
+    while msg[i] != 0 {
+        vga[i] = VGAEntry {
+            val: msg[i],
+            color: color
+        };
+        i += 1;
+    }
+
+    loop {} 
+}

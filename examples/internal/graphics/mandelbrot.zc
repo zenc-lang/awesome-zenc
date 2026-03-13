@@ -1,0 +1,79 @@
+
+@derive(Copy)
+struct Complex {
+    re: float,
+    im: float,
+}
+
+impl Complex {
+    fn new(re: float, im: float) -> Complex {
+        return Complex { re: re, im: im };
+    }
+
+    fn add(self, b: Complex) -> Complex {
+        return Complex { re: .re + b.re, im: .im + b.im };
+    }
+
+    fn mul(self, b: Complex) -> Complex {
+        return Complex {
+            re: .re * b.re - .im * b.im,
+            im: .re * b.im + .im * b.re
+        };
+    }
+
+    fn abs2(self) -> float {
+        return .re * .re + .im * .im;
+    }
+
+    fn print(self) {
+        println "{.re}{.im}i";
+    }
+}
+
+fn pick_char(iter: int, max_iter: int, edge_chars: char[], edge_count: int) -> char {
+    if (iter >= max_iter) { return ' '; }
+    if (iter <= 0) { return edge_chars[0]; }
+
+    let t = (float)iter / (float)max_iter;
+    let idx = (int)(t * (float)(edge_count - 1));
+
+    if (idx < 0) { idx = 0; }
+    if (idx >= edge_count) { idx = edge_count - 1; }
+
+    return edge_chars[idx];
+}
+
+fn main() {
+    let width = 120;
+    let height = 40;
+    let max_iter = 200;
+
+    let edge_chars: char[] = [ '#', '@', '%', '8', '&', '*', '+', '=', '-', ':', '.', ',' ];
+    let edge_count = 12;
+
+    let min_re = -2.2;
+    let max_re =  1.0;
+    let min_im = -1.2;
+    let max_im =  1.2;
+
+    for y in 0..height {
+        let im = max_im - (max_im - min_im) * ((float)y / (float)(height - 1));
+
+        for x in 0..width {
+            let re = min_re + (max_re - min_re) * ((float)x / (float)(width - 1));
+
+            let c = Complex::new(re, im);
+            let z = Complex::new(0.0, 0.0);
+
+            let iter = 0;
+            while (iter < max_iter and z.abs2() <= 4.0) {
+                z = z.mul(z).add(c);
+                iter += 1;
+            }
+
+            let pixel = pick_char(iter, max_iter, edge_chars, edge_count);
+            print "{pixel}";
+        }
+        print "\n";
+    }
+}

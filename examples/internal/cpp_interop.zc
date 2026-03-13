@@ -1,0 +1,41 @@
+// Compile with: zc examples/cpp_interop.zc --cpp
+import "std/cpp/vector.zc"
+import "std/cpp/string.zc"
+
+include <iostream>
+
+// Custom C++ helper functions in raw blocks
+raw {
+    #ifdef __cplusplus
+    extern "C" {
+        void _cpp_print(char* msg) {
+            std::cout << "[C++] " << msg << std::endl;
+        }
+    }
+    #endif
+}
+
+extern fn _cpp_print(msg: string);
+
+fn main() {
+    "=> Zen C + C++ interop.";
+
+    // Call a raw C++ function directly
+    _cpp_print("Hello from C++!");
+
+    // Use the native Zen-C wrapper for std::vector<int>
+    let vec = cpp_vector_int_create();
+    vec.push(10);
+    vec.push(20);
+    vec.push(30);
+
+    let sum = 0;
+    for (let i = 0; i < vec.len(); i = i + 1) {
+        sum = sum + vec.get(i);
+    }
+    "Sum of C++ vector: {sum}";
+
+    // Use the native Zen-C wrapper for std::string
+    let str = cpp_string_create("works!");
+    printf("C++ string: %s\n", str.c_str());
+}

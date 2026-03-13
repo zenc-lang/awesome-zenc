@@ -1,0 +1,85 @@
+
+import "std/mem.zc"
+
+struct Node {
+    value: int;
+    next: Node*;
+}
+
+impl Node {
+    fn new(v: int) -> Self* {
+        let n = alloc<Node>();
+        guard n != NULL else {
+            "Out of memory!";
+            return NULL;
+        }
+        n.value = v;
+        n.next = NULL;
+        return n;
+    }
+}
+
+struct LinkedList {
+    head: Node*;
+}
+
+impl LinkedList {
+    fn new() -> Self {
+        return Self { head: NULL };
+    }
+    
+    fn push(self, v: int) {
+        let new_node = Node::new(v);
+        guard new_node != NULL else { return; }
+        
+        new_node.next = self.head;
+        self.head = new_node;
+    }
+    
+    fn print_list(self) {
+        let current: Node* = self.head;
+        "["..;
+        while current != NULL {
+            "{current.value}"..;
+            current = current.next;
+            if current != NULL {
+                " -> "..;
+            }
+        }
+        "]";
+    }
+    
+    fn free(self) {
+        let current: Node* = self.head;
+        while current != NULL {
+            autofree let temp = current;
+            current = current.next;
+        }
+        self.head = NULL;
+    }
+    
+    fn len(self) -> int {
+        let count = 0;
+        let current: Node* = self.head;
+        while current != NULL {
+            count++;
+            current = current.next;
+        }
+        return count;
+    }
+}
+
+fn main() {
+    let list = LinkedList::new();
+    defer list.free();
+    
+    "Pushing: 10, 20, 30...";
+    list.push(10);
+    list.push(20);
+    list.push(30);
+    
+    "List length: {list.len()}";
+    
+    "Current List: "..;
+    list.print_list();
+}

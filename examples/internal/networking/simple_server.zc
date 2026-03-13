@@ -1,0 +1,27 @@
+
+import "std/net/http.zc"
+
+let index_html = embed "examples/networking/index.html" as string;
+
+fn handler(req: Request*, res: Response*) {
+    "Received request: {req.method.c_str()} {req.path.c_str()}";
+    
+    if (req.path.eq_str("/")) {
+        res.set_body_str(index_html);
+        res.set_header_str("Content-Type", "text/html");
+    } else if (req.path.eq_str("/about")) {
+        res.set_body_str("<h1>About</h1><p>This is a Zen-C server.</p>");
+        res.set_header_str("Content-Type", "text/html");
+    } else {
+        res.status = 404;
+        res.set_body_str("404 Not Found");
+    }
+}
+
+fn main() {
+    let port = 8080;
+    let server = Server::new(port, handler);
+    
+    "Starting server on http://localhost:{port} ...";
+    server.start();
+}

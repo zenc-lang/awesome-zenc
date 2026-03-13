@@ -1,0 +1,42 @@
+
+//> macos: framework: Foundation
+//> linux: cflags: -fconstant-string-class=NSConstantString -D_NATIVE_OBJC_EXCEPTIONS -I/usr/include/x86_64-linux-gnu/GNUstep -std=gnu99
+//> linux: link: -lgnustep-base -lobjc
+
+include <Foundation/Foundation.h>
+
+raw {
+    id make_nsstring(const char* s) {
+        return [NSString stringWithUTF8String:s];
+    }
+
+    void print_description(id obj) {
+        NSLog(@"[ObjC Log] Description: %@", obj);
+    }
+}
+
+fn main() {
+
+    raw {
+        NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    }
+
+    "=> Zen C + Objective-C interop demo.";
+    "=> (Make sure to run with: zc run --objc examples/objc_interop.zc)";
+
+    // Call ObjC helper to create an NSString (returned as id)
+    let s = make_nsstring("Hello from Objective-C!");
+    
+    // Pass it back to ObjC
+    print_description(s);
+
+    "Zen C interpolated string: {s}";
+
+    raw {
+        // You can also  raw ObjC syntax anywhere.
+        NSArray *arr = [NSArray arrayWithObjects: @"Zen", @"Bit", @"C", nil];
+        NSLog(@"[ObjC Raw] Array: %@", arr);
+
+        [pool drain];
+    }
+}

@@ -1,0 +1,33 @@
+
+import "std/cuda.zc"
+import "std/string.zc"
+
+fn main() {
+    let count = cuda_device_count();
+    "---------------------------";
+    "CUDA Device Count: {count}";
+    "---------------------------";
+    
+    if (count > 0) {
+        let props = cuda_device_properties(0);
+        
+        "Device Name: {props.name.vec.data}";
+        "Total Global Mem: {props.total_global_mem}";
+        "SM Count: {props.multi_processor_count}";
+        "Compute Capability: {props.major}.{props.minor}";
+        "Max Threads per Block: {props.max_threads_per_block}";
+        "Warp Size: {props.warp_size}";
+        
+        props.name.free();
+        
+        let driver = cuda_driver_version();
+        let runtime = cuda_runtime_version();
+        
+        "Driver Version: {driver}";
+        "Runtime Version: {runtime}";
+        
+        let mem = cuda_mem_info();
+        "Free Mem: {mem.free}";
+        "Total Mem: {mem.total}";
+    }
+}
