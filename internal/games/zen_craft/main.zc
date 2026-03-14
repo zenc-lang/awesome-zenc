@@ -227,11 +227,11 @@ fn load_texture_from_memory(_data: char*, _len: int) -> rl::Texture2D {
 }
 
 fn init_textures() {
-    let dirt_data = embed "examples/games/zen_craft/assets/dirt.png";
-    let grass_data = embed "examples/games/zen_craft/assets/grass_side.png";
-    let stone_data = embed "examples/games/zen_craft/assets/stone.png";
-    let sun_data = embed "examples/games/zen_craft/assets/sun.png";
-    let moon_data = embed "examples/games/zen_craft/assets/moon.png";
+    let dirt_data = embed "examples/internal/games/zen_craft/assets/dirt.png";
+    let grass_data = embed "examples/internal/games/zen_craft/assets/grass_side.png";
+    let stone_data = embed "examples/internal/games/zen_craft/assets/stone.png";
+    let sun_data = embed "examples/internal/games/zen_craft/assets/sun.png";
+    let moon_data = embed "examples/internal/games/zen_craft/assets/moon.png";
 
     let _tex_dirt = load_texture_from_memory(dirt_data.data, dirt_data.len);
     let _tex_grass = load_texture_from_memory(grass_data.data, grass_data.len);

@@ -18,7 +18,7 @@ def main():
     data = fetch_json(url)
     pages = data['query']['categorymembers']
     
-    os.makedirs("examples/rosetta", exist_ok=True)
+    os.makedirs("rosetta", exist_ok=True)
     os.makedirs("website_out", exist_ok=True)
 
     for page in pages:
@@ -42,7 +42,7 @@ def main():
                 page_url = f"https://rosettacode.org/wiki/{title.replace(' ', '_')}"
                 history_url = f"{page_url}?action=history"
                 
-                zc_filename = f"examples/rosetta/{safe_title}.zc"
+                zc_filename = f"rosetta/{safe_title}.zc"
                 with open(zc_filename, "w", encoding="utf-8") as f:
                     f.write(code + "\n")
                     

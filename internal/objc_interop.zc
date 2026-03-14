@@ -22,7 +22,7 @@ fn main() {
     }
 
     "=> Zen C + Objective-C interop demo.";
-    "=> (Make sure to run with: zc run --objc examples/objc_interop.zc)";
+    "=> (Make sure to run with: zc run --objc examples/internal/objc_interop.zc)";
 
     // Call ObjC helper to create an NSString (returned as id)
     let s = make_nsstring("Hello from Objective-C!");

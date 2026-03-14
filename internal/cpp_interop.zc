@@ -1,4 +1,4 @@
-// Compile with: zc examples/cpp_interop.zc --cpp
+// Compile with: zc examples/internal/cpp_interop.zc --cpp
 import "std/cpp/vector.zc"
 import "std/cpp/string.zc"
 

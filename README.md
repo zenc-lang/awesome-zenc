@@ -8,8 +8,8 @@ This repository serves as the primary collection of examples for Zen C. It demon
 
 ## Repository Structure
 
-- `examples/rosetta/`: A wide collection of [Rosetta Code](https://rosettacode.org/wiki/Category:Zen_C) implementations showcasing idiomatic Zen C solutions to common programming tasks.
-- `examples/internal/`: Internal feature demos, including networking, SIMD, graphics, and more.
+- `rosetta/`: A wide collection of [Rosetta Code](https://rosettacode.org/wiki/Category:Zen_C) implementations showcasing idiomatic Zen C solutions to common programming tasks.
+- `internal/`: Internal feature demos, including networking, SIMD, graphics, and more.
 
 ## Rosetta Code
 
@@ -29,13 +29,12 @@ We are always looking to expand our presence there! All additions and improvemen
 ### Internal Demos
 - **[SIMD](examples/internal/simd.zc)**: Leveraging hardware acceleration for performance.
 - **[Networking](examples/internal/networking/)**: Real-world communication examples.
-- **[Games](examples/internal/games/)**: Interactive demos built with Zen C.
+- **[Games](examples/internal/games/zen_craft/)**: Interactive demos built with Zen C.
 
-## How to Run
-
-To run any example, ensure you have the [Zen C compiler](https://github.com/z-libs/Zen-C) installed, then use the `run` command:
+To run any example, ensure you have the [Zen C compiler](https://github.com/z-libs/Zen-C) installed. Since this repository is intended to be used as a submodule at `examples/` in the Zen C root, you can run examples like this:
 
 ```bash
+# From Zen-C root
 zc run examples/rosetta/Hello_world_Newbie.zc
 ```
 
