@@ -40,7 +40,7 @@ impl Config {
 }
 
 fn main() {
-    let path = "examples/data/config.json";
+    let path = "examples/examples/internal/data/config.json";
     
     let content_res = File::read_all(path);
     if content_res.is_err() {
