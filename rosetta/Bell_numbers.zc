@@ -14,17 +14,17 @@ fn main() {
     println "First 10 rows of the Bell Triangle\n1";
     
     for i in 1..=50 {
-        let prev = a[0].clone();
-        a[0] = a[i - 1].clone();
-        bells[i] = a[0].clone();
+        let prev = (&a[0]).clone();
+        a[0] = (&a[i - 1]).clone();
+        bells[i] = (&a[0]).clone();
         
         let pr = i < 10;
         if pr { print "{a[0]} "; }
         
         for j in 1..=i {
-            let temp = a[j].clone();
-            a[j] = prev + a[j - 1];
-            prev = temp;
+            let next_val = (&a[j]).clone();
+            a[j] = prev + &a[j-1];
+            prev = next_val;
             
             if pr { print "{a[j]} "; }
         }
