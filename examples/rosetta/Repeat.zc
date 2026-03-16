@@ -10,3 +10,28 @@ fn main() {
         println "Hello from closure!"; 
     }, 3);
 }
+
+// Reusing the 'times' procedure defined above
+fn main() {
+    let count = 0;
+    times(fn[&]() {
+        count++;
+        println "Iteration {count}";
+    }, 5);
+}
+
+// The procedure accepts a raw C-style function pointer
+fn times_fp(proc: fn*(), n: uint) {
+    for _ in 0..n {
+        proc();
+    }
+}
+
+// A standard named function
+fn say_hello() {
+    println "Hello from function pointer!";
+}
+
+fn main() {
+    times_fp(say_hello, 2);
+}

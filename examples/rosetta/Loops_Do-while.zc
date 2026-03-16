@@ -1,0 +1,14 @@
+fn main() {
+    let v = 0;
+    do {
+       "{++v}";
+    } while v % 6;
+}
+
+fn main() {
+    let v = 0;
+    loop {
+        "{++v}";
+        if !(v % 6) { break; }
+    }
+}

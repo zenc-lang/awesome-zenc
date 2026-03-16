@@ -67,8 +67,7 @@ fn main() {
     "Date            Momentum(p)          NKTg1          NKTg2        v_sim       v_NASA      Error"
     "-----------------------------------------------------------------------------------------------"
 
-    let i = 0;
-    for data in sim_2025 {
+    for i, data in sim_2025 {
         let p      = momentum(data.m, data.v);
         let n1     = nktg1(data.x, p);
         let n2     = nktg2(p);
@@ -85,6 +84,5 @@ fn main() {
             error : error
         };
         row.display();
-        i++;
     }
 }
