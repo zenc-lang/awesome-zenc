@@ -17,6 +17,13 @@ def wiki_to_markdown(wiki_text, page_url):
     
     md = re.sub(r'(?:<lang[^>]*>|<syntaxhighlight[^>]*>|<highlight[^>]*>)(.*?)(?:</lang>|</syntaxhighlight>|</highlight>)', 
                 repl_code, wiki_text, flags=re.DOTALL | re.IGNORECASE)    
+    
+    md = re.sub(r'\{\{out\}\}', r'\n**Output:**\n', md, flags=re.IGNORECASE)
+    
+    def repl_pre(match):
+        return f"\n```\n{match.group(1).strip()}\n```\n"
+    md = re.sub(r'<pre[^>]*>(.*?)</pre>', repl_pre, md, flags=re.DOTALL | re.IGNORECASE)
+
     md = re.sub(r'\[\[([^\]|]+)\|([^\]]+)\]\]', r'[\2](https://rosettacode.org/wiki/\1)', md)
     md = re.sub(r'\[\[([^\]]+)\]\]', r'[\1](https://rosettacode.org/wiki/\1)', md)
     md = re.sub(r"'''(.*?)'''", r"**\1**", md)
