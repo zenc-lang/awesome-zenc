@@ -31,7 +31,7 @@ We are always looking to expand our presence there! All additions and improvemen
 - **[Networking](examples/internal/networking/)**: Real-world communication examples.
 - **[Games](examples/internal/games/zen_craft/)**: Interactive demos built with Zen C.
 
-To run any example, ensure you have the [Zen C compiler](https://github.com/z-libs/Zen-C) installed. Since this repository is intended to be used as a submodule at `examples/` in the Zen C root, you can run examples like this:
+To run any example, ensure you have the [Zen C compiler](https://github.com/zenc-lang/zenc) installed. Since this repository is intended to be used as a submodule at `examples/` in the Zen C root, you can run examples like this:
 
 ```bash
 # From Zen-C root
@@ -51,5 +51,5 @@ Found a bug or want to add a new example? Contributions are welcome! Please feel
 
 ## Related Projects
 
-- **[Zen-C](https://github.com/z-libs/Zen-C)**: The core compiler and standard library.
-- **[Zen-C-Docs](https://github.com/z-libs/Zen-C-Docs)**: Official documentation and language reference.
+- **[zenc](https://github.com/zenc-lang/zenc)**: The core compiler and standard library.
+- **[docs](https://github.com/zenc-lang/docs)**: Official documentation and language reference.
