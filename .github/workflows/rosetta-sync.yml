@@ -16,12 +16,12 @@ jobs:
         with:
           path: 'awesome'
 
-      - name: Checkout Website Repository
+      - name: Checkout Docs Repository
         uses: actions/checkout@v4
         with:
-          repository: 'zenc-lang/www'
+          repository: 'zenc-lang/docs'
           token: ${{ secrets.WEBSITE_REPO_TOKEN }}
-          path: 'website'
+          path: 'docs'
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -41,13 +41,13 @@ jobs:
           git add examples/rosetta/
           git diff --quiet && git diff --staged --quiet || (git commit -m "chore: auto-sync Rosetta Code" && git push)
 
-      - name: Sync to Website Repo
+      - name: Sync to Docs Repo
         run: |
-          mkdir -p website/docs.zenc-lang.org/content/examples/rosetta/
-          rsync -avz --delete --exclude='_index.md' awesome/website_out/ website/docs.zenc-lang.org/content/examples/rosetta/
+          mkdir -p docs/rosetta/
+          rsync -avz --delete --exclude='_index.md' awesome/website_out/ docs/rosetta/
           
-          cd website
+          cd docs
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs.zenc-lang.org/content/examples/rosetta/
-          git diff --quiet && git diff --staged --quiet || (git commit -m "docs: sync examples from Awesome-Zen-C" && git push)
+          git add rosetta/
+          git diff --quiet && git diff --staged --quiet || (git commit -m "docs: sync Rosetta Code examples from awesome-zenc" && git push)
