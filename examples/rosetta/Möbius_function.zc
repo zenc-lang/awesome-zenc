@@ -1,0 +1,52 @@
+import "std/math.zc"
+
+fn main() -> int {
+    def MU_MAX: int = 1000000;
+    let mu: int*;
+    let sqroot: int;
+
+    sqroot = (int)Math::sqrt(MU_MAX);
+
+    mu = malloc((MU_MAX + 1) * sizeof(int));
+
+    for i in 0..MU_MAX {
+        mu[i] = 1;
+    }
+
+    for i in 2..=sqroot {
+        if mu[i] == 1 {
+            // for each factor found, swap + and -
+            for (let j: int = i; j <= MU_MAX; j += i) {
+                mu[j] *= -i;
+            }
+            // square factor = 0
+            for (let j = i * i; j <= MU_MAX; j += i * i) {
+                mu[j] = 0;
+            }
+        }
+    }
+
+    for i in 2..=MU_MAX {
+        if mu[i] == i {
+            mu[i] = 1;
+        } else if mu[i] == -i {
+            mu[i] = -1;
+        } else if mu[i] < 0 {
+            mu[i] = 1;
+        } else if mu[i] > 0 {
+            mu[i] = -1;
+        }
+    }
+
+    println "First 199 terms of the möbius function are as follows:"
+    print "    ";
+    for i in 1..200 {
+        printf("%2d  ", mu[i]);
+        if (i + 1) % 20 == 0 {
+            println "";
+        }
+    }
+
+    free(mu);
+    return 0;
+}
