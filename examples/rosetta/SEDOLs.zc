@@ -37,9 +37,9 @@ fn main() {
     for t in tests {
         let cd = sedol_checkdigit(t);
         if cd >= 0 {
-            "{t} -> {t}{cd}";
+            println "{t} -> {t}{cd}";
         } else {
-            "{t} -> not valid";
+            println "{t} -> not valid";
         }
     }
 }

@@ -26,10 +26,10 @@ fn main() {
         (60175.77306795546, 42213.07192354373)
     ];
 
-    "Differences (to 4dp) between these bearings:";
+    println "Differences (to 4dp) between these bearings:";
     for pair in pairs {
         let (p0, p1) = pair;
         let diff = subtract(p0, p1);
-        "{p0:12.4f}° and {p1:12.4f}° -> {diff:9.4f}°";
+        println "{p0:12.4f}° and {p1:12.4f}° -> {diff:9.4f}°";
     }
 }

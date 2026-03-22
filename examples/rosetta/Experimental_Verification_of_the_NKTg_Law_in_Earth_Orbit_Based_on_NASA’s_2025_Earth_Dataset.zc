@@ -8,7 +8,7 @@ struct OrbitalData {
 }
 
 fn new_od(date: string, x: f64, v: f64, m: f64) -> OrbitalData {
-    return OrbitalData { date: date, x: x, v: v, m: m }
+    return OrbitalData { date: date, x: x, v: v, m: m };
 }
         
 struct ResultRow {
@@ -23,7 +23,7 @@ struct ResultRow {
 
 impl ResultRow {
     fn display(self) -> void {
-        println "{.date:-12s} {.p:14.3e} {.nktg1:14.3e} {.nktg2:14.3e} {.v_sim:12.3e} {.v_nasa:12.3e} {.error:10.4f}%"
+        println "{.date:-12s} {.p:14.3e} {.nktg1:14.3e} {.nktg2:14.3e} {.v_sim:12.3e} {.v_nasa:12.3e} {.error:10.4f}%";
     }
 }
 
@@ -62,10 +62,10 @@ fn main() {
         ("12/31/2025", 3.0286e4)
     ];
 
-    "\nExperimental Verification of NKTg Law (Earth 2025)\n"
+    println "\nExperimental Verification of NKTg Law (Earth 2025)\n";
 
-    "Date            Momentum(p)          NKTg1          NKTg2        v_sim       v_NASA      Error"
-    "-----------------------------------------------------------------------------------------------"
+    println "Date            Momentum(p)          NKTg1          NKTg2        v_sim       v_NASA      Error";
+    println "-----------------------------------------------------------------------------------------------";
 
     for i, data in sim_2025 {
         let p      = momentum(data.m, data.v);
