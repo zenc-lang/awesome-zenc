@@ -1,0 +1,21 @@
+import "std/string.zc"
+
+fn reverse_str(s: string) -> string {
+    let s2 = String::from(s);
+    let r = s2.runes();
+    r.reverse();
+    return String::from_runes_vec(r).c_str();
+}
+
+fn is_pal(s: string) -> bool {
+    if strlen(s) > 0 { return s == reverse_str(s);}
+    return true;
+}
+
+fn main() {
+    println "Are the following palindromes?";
+    let phrases = ["rotor", "rosetta", "step on no pets", "été", "zenc", "🦊😀🦊"];
+    for phrase in phrases {
+        println "  {phrase} => {is_pal(phrase)}";
+    }
+}

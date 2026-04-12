@@ -1,0 +1,12 @@
+import "std/string.zc"
+
+fn main() {
+    let a = "Beyoncé";
+    let s = String::from(a);
+    let l = s.utf8_len();
+    let b = s.utf8_substr(1, l - 1).c_str();
+    let c = s.utf8_substr(0, l - 1).c_str();
+    let d = s.utf8_substr(1, l - 2).c_str();
+    let e = [a, b, c, d];
+    for t in e { println "{t}"; }
+}

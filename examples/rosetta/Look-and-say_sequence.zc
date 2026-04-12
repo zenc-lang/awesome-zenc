@@ -1,0 +1,26 @@
+import "std/string.zc"
+
+fn look_and_say(s: string) -> string {
+    let res = String::from("");
+    let digit = s[0];
+    let count = 1;
+    for i in 1..strlen(s) {
+        if s[i] == digit {
+            count++;
+        } else {
+            res.append_c("{count}{digit:c}");
+            digit = s[i];
+            count = 1;
+        }
+    }
+    res.append_c("{count}{digit:c}");
+    return res.c_str();
+}
+
+fn main() {
+    let las = "1";
+    for i in 1..=15 {
+        println "{las}";
+        las = look_and_say(las);
+    }
+}
