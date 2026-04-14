@@ -31,7 +31,7 @@ fn main() {
             let sum: u64 = digs[0] - 1;
             for j in 1..digs.length() { sum = sum * 10 + digs[j] - 1; }
             if is_square(sum) {
-                println "{sq]";
+                println "{sq}";
                 count++;
             }
         }

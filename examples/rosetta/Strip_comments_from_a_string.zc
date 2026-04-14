@@ -1,0 +1,24 @@
+import "std/string.zc"
+
+fn strip_comments(s: string) -> string {
+    let str = String::from(s);
+    let tokens = ['#', ';'];
+    for token in tokens {
+        let t = str.split(token);
+        if t.length() > 1 { return t[0].trim().c_str(); }
+    }
+    return str.trim().c_str();
+}
+
+fn main() {
+    let strings = [
+        " apples, pears # and bananas",
+        " apples, pears ; and bananas",
+        " apples, pears \t     "
+    ]
+
+    for s in strings {
+        let t = strip_comments(s);
+        println "'{s}' -> '{t}'";
+    }
+}

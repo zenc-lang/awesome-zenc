@@ -5,7 +5,7 @@ import "gtk/gtk.h" as gtk;
 let counter = 0;
 let label: gtk::GtkWidget*;
 
-fn on_button_clicked(button: gtk::GtkWidget*, data: gtk::gpointer) {
+fn on_button_clicked(_: gtk::GtkWidget*, __: gtk::gpointer) {
     counter += 1;
     
     let text = "Button clicked {counter} times";
