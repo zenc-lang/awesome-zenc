@@ -85,7 +85,7 @@ fn main() {
     println "q2          = {q2}";
     println "r           = {r:g}";
     println "norm(q)     = {q.norm():0.14f}";
-    println "-q          = {q.neg()}";
+    println "-q          = {-q}";
     println "conj(q)     = {q.conj()}";
     println "r + q       = {Quaternion::real_add(r, q)}";
     println "q + r       = {q.add_real(r)}";
