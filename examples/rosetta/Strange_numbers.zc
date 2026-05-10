@@ -1,0 +1,60 @@
+import "std/vec.zc"
+
+fn is_prime(i: int) -> bool {
+    return i == 2 || i == 3 || i == 5 || i == 7;
+}
+
+impl int {
+    fn abs(self) -> int { return *self >= 0 ? *self : -(*self); }
+}
+
+fn main() {
+    let count = 0;
+    let d = Vec<int>::new();
+    println "Strange numbers in the open interval (100, 500) are:\n";
+    for i in 101..500 {
+        d.clear();
+        let j = i;
+        while j > 0 {
+            d << (j % 10);
+            j /= 10;
+        }
+        if is_prime((d[0] - d[1]).abs()) && is_prime((d[1] - d[2]).abs()) {
+            print "{i} ";
+            if !(++count % 10) { println ""; }
+        }
+    }
+    if count % 10 { println ""; }
+    println "\n{count} strange numbers in all.";
+}
+
+import "std/vec.zc"
+import "locale.h"
+
+let diffs: const int[8] = [-7, -5, -3, -2, 2, 3, 5, 7];
+let possibles: [Vec<int>; 10];
+
+fn main() {
+    for i in 0..10 {
+        possibles[i] = Vec<int>::new();
+        for d in diffs {
+            let sum = i + d;
+            if sum >= 0 && sum < 10 { possibles[i] << sum; }
+        }
+    }
+    let places = 10;
+    let start = 1;
+    let strange_ones = Vec<int>::new();
+    strange_ones << start;
+    for i in 2..=places {
+        let new_ones = Vec<int>::new();
+        for n in strange_ones {
+            for next_n in possibles[n % 10] { new_ones << (n * 10 + next_n); }
+        }
+        strange_ones.free();
+        strange_ones = new_ones;
+    }
+    setlocale(LC_NUMERIC, "");
+    println "Found {strange_ones.length():'lu} {places}-digit strange numbers beginning with {start}.";
+    for i in 0..10 { possibles[i].free(); }
+}
