@@ -2,18 +2,18 @@ import "std/string.zc"
 
 fn split(s: String) {
     if s.length() == 0 { return; }
-    let last = s.utf8_at(0);
-    let curr = last;
+    let last = s.utf8_get(0);
+    let curr = String::from_rune(last);
     for i, code in s {
         if i != 0 {
-            let c = String::from_rune(code);
-            if c == last {
+            if code == last {
+                let c = String::from_rune(code);
                 curr += &c;
             } else {
                 print "{curr}, ";
-                curr = c;
+                curr = String::from_rune(code);
             }
-            last = c;
+            last = code;
         }
     }
     println "{curr}";
