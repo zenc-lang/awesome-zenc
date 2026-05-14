@@ -1,13 +1,10 @@
 {
-    "server_name": "ZenServer",
-    "port": 8080,
-    "max_connections": 100,
-    "features": {
-        "logging": true,
-        "metrics": false
-    },
-    "allowed_hosts": [
-        "localhost",
-        "127.0.0.1"
-    ]
+  "server_name": "test-server",
+  "port": 8080,
+  "max_connections": 100,
+  "features": {
+    "logging": true,
+    "metrics": false
+  },
+  "allowed_hosts": ["localhost", "example.com"]
 }
