@@ -1,9 +1,10 @@
 import "std/string.zc"
 
 fn squeeze(s: string, r: rune) {
-    let c = String::new(s).runes();
+    let ss = String::new(s)
+    let c = ss.runes();
     let le = (int)c.length();
-    let ch = String::from_rune(r).c_str();
+    let ch = String::from_rune(r);
     println "Specified character = '{ch}'";
     println "original : length = {le:2d}, string = «««{s}»»»";
     if le >= 2 {
@@ -11,7 +12,7 @@ fn squeeze(s: string, r: rune) {
             if c[i] == r && c[i] == c[i + 1] { c.remove(i); }
         }
         let cl = (int)c.length();
-        let cs = String::from_runes_vec(c).c_str();
+        let cs = String::from_runes_vec(c);
         println "squeezed : length = {cl:2d}, string = «««{cs}»»»\n";
     } else {
         println "squeezed: length = {le:2d}, string = «««{s}»»»\n";
@@ -34,6 +35,7 @@ fn main() {
     let spec = [ " ", "-", "7", ".", " -r", "e", "s", "a", "😍" ];
 
     for i in 0..strings.len {
-        for ch in String::new(spec[i]) { squeeze(strings[i], ch); }
+        let s = String::new(spec[i]);
+        for ch in s { squeeze(strings[i], ch); } 
     }
 }

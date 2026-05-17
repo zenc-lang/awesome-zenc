@@ -1,6 +1,6 @@
 import "std/math.zc"
 
-fn rms(a: f64[], len: const int) -> f64 {
+fn rms(a: f64*, len: const int) -> f64 {
     let sum = 0.0;
     for i in 0..len { sum += a[i] * a[i]; }
     return Math::sqrt(sum / len);

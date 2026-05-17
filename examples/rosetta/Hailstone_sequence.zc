@@ -24,7 +24,7 @@ fn main() {
 
     println "\nThe Hailstone sequence for n < 100,000 with the longest length is:";
     let longest = 0;
-    let longlen = 0;
+    let longlen: u64 = 0;
     for n in 1..100_000 {
         let hs = hailstone(n);
         let c = h.length();

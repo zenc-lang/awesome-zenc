@@ -19,7 +19,7 @@ fn find_nearest_fact(n: u64) -> int {
     return 18;
 }
 
-fn find_nearest_in_vec(a: Vec<u64>*, n: u64) -> int {
+fn find_nearest_in_vec(a: Vec<u64>*, n: u64) -> u64 {
     let l: usize = 0;
     let r = a.length();
     let m: usize;
@@ -44,7 +44,7 @@ fn jordan_polya(limit: u64) -> Vec<u64> {
         res << t;
     }
     let k: usize = 2;
-    let p: int;
+    let p: u64;
     let rk: u64;
     let kl: u64;
     while k < res.length() {

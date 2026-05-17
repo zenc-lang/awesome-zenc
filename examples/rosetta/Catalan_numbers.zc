@@ -21,7 +21,7 @@ fn main() {
     setlocale(LC_NUMERIC, "en_US.UTF-8");
     println " n  Catalan number";
     println "------------------";
-    for i in 0..=15 { printf("%2d  %'9llu\n", i, catalan((u64)i)); }
+    for i in 0..=15 { printf("%2d  %'9lu\n", i, catalan((u64)i)); }
     println "\nand again using a recursive function:\n";
-    for i in 0..=15 { printf("%2d  %'9llu\n", i, catalan_rec((u64)i)); }
+    for i in 0..=15 { printf("%2d  %'9lu\n", i, catalan_rec((u64)i)); }
 }

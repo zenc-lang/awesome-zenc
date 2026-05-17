@@ -1,25 +1,20 @@
-import "std/string.zc"
-
-fn split(s: String) {
-    if s.length() == 0 { return; }
-    let last = s.utf8_at(0);
-    let curr = last;
-    for i, code in s {
-        if i != 0 {
-            let c = String::from_rune(code);
-            if c == last {
-                curr += &c;
-            } else {
-                print "{curr}, ";
-                curr = c;
-            }
-            last = c;
+fn split(s: string) {
+    let len = strlen(s);
+    if len == 0 { return; }
+    let last = s[0];
+    for i in 0..len {
+        let curr = s[i];
+        if curr == last {
+            print "{curr:c}";
+        } else {
+            print ", {curr:c}";
+            last = curr;
         }
     }
-    println "{curr}";
+    println "";
 }
 
 fn main() {
-    let s = String::from("gHHH5YY++///\\");
+    let s = "gHHH5YY++///\\";
     split(s);
 }

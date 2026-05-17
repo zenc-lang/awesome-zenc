@@ -1,13 +1,16 @@
 import "std/string.zc"
 
-fn strip_comments(s: string) -> string {
+fn strip_comments(s: string) -> String {
     let str = String::from(s);
     let tokens = ['#', ';'];
     for token in tokens {
         let t = str.split(token);
-        if t.length() > 1 { return t[0].trim().c_str(); }
+        defer { for i in 0..t.length() { t[i].free(); } }
+        if t.length() > 1 {
+            return t[0].trim();
+        }
     }
-    return str.trim().c_str();
+    return str.trim();
 }
 
 fn main() {

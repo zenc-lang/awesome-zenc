@@ -4,8 +4,8 @@ def BS2 = "\x08\x08";
 
 fn list_divide(a: int*, c: const usize, n: const int) {
     assert(n > 0, "'n' must be a positive integer.");
-    let q = c / n;
-    let r = c % n;
+    let q: int = c / n;
+    let r: int = c % n;
     let p = Vec<int>::new();
     if r > 0 {
         for i in 1..=r { p << (q + 1); }
@@ -26,9 +26,9 @@ fn list_divide(a: int*, c: const usize, n: const int) {
     }
 
     print "[";
-    for chunk in res {
+    for i in 0..res.length() {
         print "[";
-        for i in chunk { print "{i}, "; }
+        for j in res[i] { print "{j}, "; }
         print "{BS2}], ";
     }
     println "{BS2}]";

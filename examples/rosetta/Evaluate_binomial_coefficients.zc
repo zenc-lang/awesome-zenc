@@ -4,7 +4,7 @@ fn factorial(n: uint) -> u64 {
     return prod;
 }
 
-fn binomial(n: uint, k: uint) -> uint {
+fn binomial(n: uint, k: uint) -> u64 {
     assert(n >= k, "The second argument cannot be more than the first");
     if n == k { return 1; }
     let prod: u64 = 1;
@@ -23,7 +23,7 @@ fn main() {
     println "";
     for n in 0..=LIMIT {
         print "{n:3d} |";
-        for k in 0..=n { print "{binomial(n, k):5d}"; }
+        for k in 0..=n { print "{binomial(n, k):5lu}"; }
         println "";
     }
 }

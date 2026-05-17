@@ -27,8 +27,8 @@ fn main() {
     ];
 
     println "Differences (to 4dp) between these bearings:";
-    for pair in pairs {
-        let (p0, p1) = pair;
+    for i in 0..pairs.len {
+        let (p0, p1) = pairs[i];
         let diff = subtract(p0, p1);
         println "{p0:12.4f}° and {p1:12.4f}° -> {diff:9.4f}°";
     }

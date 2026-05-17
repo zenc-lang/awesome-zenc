@@ -26,8 +26,8 @@ fn main() {
     let res: (f64, f64, f64)[2];
     res[0] = diversity_theorem(truth, a1, 3);
     res[1] = diversity_theorem(truth, a2, 4);
-    for r in res {
-        let (ae, ce, div) = r;
+    for i in 0..res.len {
+        let (ae, ce, div) = res[i];
         println "Average-error {ae:6.3f}";
         println "Crowd-error   {ce:6.3f}";
         println "Diversity     {div:6.3f}\n";
