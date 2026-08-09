@@ -9,13 +9,14 @@ fn main() {
             fib[i] = fib[i-1] + fib[i-2];
         }
 
-        printf("// Generated Fibonacci Sequence\n");
-        printf("let fibs: int[%d] = [", N);
+        code("let fibs: int[");
+        code(N);
+        code("] = [");
         for let i=0; i<N; i+=1 {
-            printf("%ld", fib[i]);
-            if (i < N-1) printf(", ");
+            code(fib[i]);
+            if (i < N-1) code(", ");
         }
-        printf("];\n");
+        code("];\n");
     }
 
     print "Compile-time generated Fibonacci sequence:\n";
