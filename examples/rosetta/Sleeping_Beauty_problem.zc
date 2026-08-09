@@ -18,6 +18,7 @@ fn sleeping_beauty(reps: int) -> f64 {
     println "Wakings over {reps:'d} repetitions = {wakings:'d}";
     let pc = (f64)heads / (f64)wakings * 100.0;
     println "Percentage probability of heads on waking = {pc:g}%";
+    return pc;
 }
 
 fn main() {

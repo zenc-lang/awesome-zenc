@@ -97,6 +97,7 @@ fn decompose(n: u64, start: u64) -> Vec<u64> {
             }
         }
     }
+    return Vec<u64>::new(); 
 }
 
 fn superscript(n: int) -> String {

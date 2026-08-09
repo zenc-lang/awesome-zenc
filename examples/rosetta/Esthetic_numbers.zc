@@ -2,7 +2,7 @@ import "std/vec.zc"
 import "std/string.zc"
 import "locale.h"
 
-fn uabs(a: u64, b: u64) -> u64 { return a > b ? a - b : b - a; }
+fn abs_diff(a: u64, b: u64) -> u64 { return a > b ? a - b : b - a; }
 
 fn is_esthetic(n: u64, b: u64) -> bool {
     if n == 0 { return false; }
@@ -10,7 +10,7 @@ fn is_esthetic(n: u64, b: u64) -> bool {
     n /= b;
     while n > 0 {
         let j = n % b;
-        if uabs(i, j) != 1 { return false; }
+        if abs_diff(i, j) != 1 { return false; }
         n /= b;
         i = j;
     }

@@ -1,9 +1,3 @@
-git clone https://github.com/zenc-lang/zenc.git
-cd Zen-C
-make clean # remove old build files
-make
-sudo make install
-
 fn main() {
     // In Zen C, I/O is not handled like in C. While 'printf' or 'puts'
     // among others are still available, Zen C also has special keywords,

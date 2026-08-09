@@ -19,6 +19,7 @@ fn low_square_start_n(n: u64) -> u64 {
         sqrt_n10 *= 10.0;
         if sqrt_n > (10.0 * n) { break; }
     }
+    return 0;
 }
 
 fn main() {

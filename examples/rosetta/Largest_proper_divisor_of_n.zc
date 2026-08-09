@@ -4,6 +4,7 @@ fn lpd(n: int) -> int {
     for i in lim..=1 step -1 {
         if !(n % i) { return i; }
     }
+    return 1;   // 1 is always a proper divisor for n >= 2
 }
 
 fn main() {
