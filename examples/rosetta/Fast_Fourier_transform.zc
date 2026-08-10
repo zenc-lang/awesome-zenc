@@ -75,8 +75,7 @@ fn main() {
     for val in signal {
         let mag = val.magnitude();
         let s = val.to_string();
-        let s_ptr = s.c_str();
-        println "\tx[{i}] = {s_ptr}  (Magnitude: {mag})";
+        println "\tx[{i}] = {s}  (Magnitude: {mag})";
         i += 1;
     }
     
@@ -87,8 +86,7 @@ fn main() {
     for X in fft_output {
         let mag = X.magnitude();
         let s = X.to_string();
-        let s_ptr = s.c_str();
-        println "\tX[{k}] = {s_ptr}  (Magnitude: {mag})";
+        println "\tX[{k}] = {s}  (Magnitude: {mag})";
         k += 1;
     }
 }

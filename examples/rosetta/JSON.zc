@@ -20,5 +20,5 @@ fn main() {
     tags.push(JsonValue::string("fast"));
     res.set("tags", tags);
 
-    println "Serialized: {res.to_string().c_str()}";
+    println "Serialized: {res.to_string()}";
 }
