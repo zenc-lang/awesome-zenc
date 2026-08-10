@@ -1,14 +1,7 @@
-// The procedure accepts a standard closure and an integer
 fn times(proc: fn(), n: uint) {
     for _ in 0..n {
         proc();
     }
-}
-
-fn __z_imported_main_1() {
-    times(fn() { 
-        println "Hello from closure!"; 
-    }, 3);
 }
 
 // Reusing the 'times' procedure defined above
